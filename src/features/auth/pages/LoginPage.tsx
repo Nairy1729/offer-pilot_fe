@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -10,13 +9,32 @@ import { AuthLayout } from "../components/AuthLayout";
 import { PasswordInput } from "../components/PasswordInput";
 import { loginSchema } from "../schemas/authSchemas";
 import type { LoginFormValues } from "../types/auth.types";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { getApiErrorMessage, getApiFieldErrors } from "../../../services/apiError";
+import { useAuthStore } from "../store/authStore";
+import { loginUser } from "../services/authService";
+
+type LocationState = {
+  from?: {
+    pathname?: string;
+  };
+};
 
 export function LoginPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const setSession = useAuthStore((state) => state.setSession);
+
+  const from =
+    (location.state as LocationState | null)?.from?.pathname ??
+    APP_ROUTES.DASHBOARD;
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -29,9 +47,32 @@ export function LoginPage() {
   async function onSubmit(values: LoginFormValues) {
     setSubmitError(null);
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    try {
+      const session = await loginUser(values);
 
-    console.log("Login form submitted", values);
+      setSession(session);
+
+      navigate(from, {
+        replace: true,
+      });
+    } catch (error) {
+      const fieldErrors = getApiFieldErrors(error);
+
+      if (fieldErrors) {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          if (field === "email" || field === "password") {
+            setError(field, {
+              type: "server",
+              message,
+            });
+          }
+        });
+      }
+
+      setSubmitError(
+        getApiErrorMessage(error, "Unable to sign in. Please try again.")
+      );
+    }
   }
 
   return (

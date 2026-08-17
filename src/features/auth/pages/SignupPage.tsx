@@ -9,11 +9,22 @@ import { AuthLayout } from "../components/AuthLayout";
 import { PasswordInput } from "../components/PasswordInput";
 import { signupSchema } from "../schemas/authSchemas";
 import type { SignupFormValues } from "../types/auth.types";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getApiErrorMessage, getApiFieldErrors } from "../../../services/apiError";
+import { useAuthStore } from "../store/authStore";
+import { registerUser } from "../services/authService";
 
 export function SignupPage() {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+  const setSession = useAuthStore((state) => state.setSession);
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -26,9 +37,39 @@ export function SignupPage() {
   });
 
   async function onSubmit(values: SignupFormValues) {
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    setSubmitError(null);
 
-    console.log("Signup form submitted", values);
+    try {
+      const session = await registerUser(values);
+
+      setSession(session);
+
+      navigate(APP_ROUTES.DASHBOARD, {
+        replace: true,
+      });
+    } catch (error) {
+      const fieldErrors = getApiFieldErrors(error);
+
+      if (fieldErrors) {
+        Object.entries(fieldErrors).forEach(([field, message]) => {
+          if (
+            field === "fullName" ||
+            field === "email" ||
+            field === "password" ||
+            field === "confirmPassword"
+          ) {
+            setError(field, {
+              type: "server",
+              message,
+            });
+          }
+        });
+      }
+
+      setSubmitError(
+        getApiErrorMessage(error, "Unable to create account. Please try again.")
+      );
+    }
   }
 
   return (

@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AppShell } from "../components/layout/AppShell";
+import { ApplicationsPage } from "../features/applications/pages/ApplicationsPage";
+import { ProtectedRoute } from "../features/auth/components/ProtectedRoute";
+import { PublicRoute } from "../features/auth/components/PublicRoute";
+import { ForgotPasswordPage } from "../features/auth/pages/ForgotPasswordPage";
 import { LandingPage } from "../features/auth/pages/LandingPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
-import { SignupPage } from "../features/auth/pages/SignupPage";
-import { ForgotPasswordPage } from "../features/auth/pages/ForgotPasswordPage";
 import { ResetPasswordPage } from "../features/auth/pages/ResetPasswordPage";
-import { ApplicationsPage } from "../features/applications/pages/ApplicationsPage";
+import { SignupPage } from "../features/auth/pages/SignupPage";
 import { DashboardPage } from "../features/dashboard/pages/DashboardPage";
 import { GoalsPage } from "../features/goals/pages/GoalsPage";
 import { LearningPage } from "../features/learning/pages/LearningPage";
@@ -21,22 +23,42 @@ export const router = createBrowserRouter([
   },
   {
     path: APP_ROUTES.LOGIN,
-    element: <LoginPage />,
+    element: (
+      <PublicRoute>
+        <LoginPage />
+      </PublicRoute>
+    ),
   },
   {
     path: APP_ROUTES.SIGNUP,
-    element: <SignupPage />,
+    element: (
+      <PublicRoute>
+        <SignupPage />
+      </PublicRoute>
+    ),
   },
   {
     path: APP_ROUTES.FORGOT_PASSWORD,
-    element: <ForgotPasswordPage />,
+    element: (
+      <PublicRoute>
+        <ForgotPasswordPage />
+      </PublicRoute>
+    ),
   },
   {
     path: APP_ROUTES.RESET_PASSWORD,
-    element: <ResetPasswordPage />,
+    element: (
+      <PublicRoute>
+        <ResetPasswordPage />
+      </PublicRoute>
+    ),
   },
   {
-    element: <AppShell />,
+    element: (
+      <ProtectedRoute>
+        <AppShell />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: APP_ROUTES.DASHBOARD,
