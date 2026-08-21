@@ -36,9 +36,10 @@ import type {
   KeywordCategory,
   SkillPriority,
   WorkMode,
-} from "../types/jdAnalyzer.types";
+} from "../types/jdAnalyzer.types"
+import { ResumeManager } from "../components/ResumeManager";
 
-type ActiveTab = "JD_ANALYZER" | "TAILOR_RESUME" | "ATS_ANALYZER";
+type ActiveTab = "RESUMES" | "JD_ANALYZER" | "TAILOR_RESUME" | "ATS_ANALYZER";
 
 type JdAnalyzerFormState = {
   rawDescription: string;
@@ -632,7 +633,7 @@ function JdAnalysisResult({
 }
 
 export function ResumePage() {
-  const [activeTab, setActiveTab] = useState<ActiveTab>("JD_ANALYZER");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("RESUMES");
   const [history, setHistory] = useState<JobDescriptionListItem[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] =
     useState<JobDescriptionAnalysis | null>(null);
@@ -809,48 +810,63 @@ export function ResumePage() {
         description="Analyze job descriptions and prepare your resume for targeted opportunities."
       />
 
-      <section className="grid gap-3 sm:grid-cols-3">
-        <button
-          type="button"
-          onClick={() => setActiveTab("JD_ANALYZER")}
-          className={`rounded-2xl border p-4 text-left transition ${
-            activeTab === "JD_ANALYZER"
-              ? "border-brand-500/50 bg-brand-500/15 text-white"
-              : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
-          }`}
-        >
-          <p className="font-semibold">JD Analyzer</p>
-          <p className="mt-1 text-xs text-slate-500">
-            Structured job description intelligence
-          </p>
-        </button>
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+  <button
+    type="button"
+    onClick={() => setActiveTab("RESUMES")}
+    className={`rounded-2xl border p-4 text-left transition ${
+      activeTab === "RESUMES"
+        ? "border-brand-500/50 bg-brand-500/15 text-white"
+        : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
+    }`}
+  >
+    <p className="font-semibold">Resumes</p>
+    <p className="mt-1 text-xs text-slate-500">
+      Upload and manage resume versions
+    </p>
+  </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab("TAILOR_RESUME")}
-          className={`rounded-2xl border p-4 text-left transition ${
-            activeTab === "TAILOR_RESUME"
-              ? "border-brand-500/50 bg-brand-500/15 text-white"
-              : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
-          }`}
-        >
-          <p className="font-semibold">Tailor Resume</p>
-          <p className="mt-1 text-xs text-slate-500">Coming soon</p>
-        </button>
+  <button
+    type="button"
+    onClick={() => setActiveTab("JD_ANALYZER")}
+    className={`rounded-2xl border p-4 text-left transition ${
+      activeTab === "JD_ANALYZER"
+        ? "border-brand-500/50 bg-brand-500/15 text-white"
+        : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
+    }`}
+  >
+    <p className="font-semibold">JD Analyzer</p>
+    <p className="mt-1 text-xs text-slate-500">
+      Structured job description intelligence
+    </p>
+  </button>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab("ATS_ANALYZER")}
-          className={`rounded-2xl border p-4 text-left transition ${
-            activeTab === "ATS_ANALYZER"
-              ? "border-brand-500/50 bg-brand-500/15 text-white"
-              : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
-          }`}
-        >
-          <p className="font-semibold">ATS Analyzer</p>
-          <p className="mt-1 text-xs text-slate-500">Coming soon</p>
-        </button>
-      </section>
+  <button
+    type="button"
+    onClick={() => setActiveTab("TAILOR_RESUME")}
+    className={`rounded-2xl border p-4 text-left transition ${
+      activeTab === "TAILOR_RESUME"
+        ? "border-brand-500/50 bg-brand-500/15 text-white"
+        : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
+    }`}
+  >
+    <p className="font-semibold">Tailor Resume</p>
+    <p className="mt-1 text-xs text-slate-500">Coming soon</p>
+  </button>
+
+  <button
+    type="button"
+    onClick={() => setActiveTab("ATS_ANALYZER")}
+    className={`rounded-2xl border p-4 text-left transition ${
+      activeTab === "ATS_ANALYZER"
+        ? "border-brand-500/50 bg-brand-500/15 text-white"
+        : "border-slate-800 bg-slate-950/70 text-slate-400 hover:bg-slate-900"
+    }`}
+  >
+    <p className="font-semibold">ATS Analyzer</p>
+    <p className="mt-1 text-xs text-slate-500">Coming soon</p>
+  </button>
+</section>
 
       {pageError ? (
         <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -863,6 +879,8 @@ export function ResumePage() {
           {successMessage}
         </div>
       ) : null}
+
+      {activeTab === "RESUMES" ? <ResumeManager /> : null}
 
       {activeTab === "TAILOR_RESUME" ? (
         <ComingSoonCard

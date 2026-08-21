@@ -1,5 +1,6 @@
 export type GoalStatus = "ACTIVE" | "PAUSED" | "ACHIEVED" | "ARCHIVED";
 
+
 export type DashboardGoal = {
   id: number;
   userId: number;
@@ -56,14 +57,14 @@ export type DashboardApplicationSummary = {
   statusCounts: ApplicationStatusCount[];
 };
 
-export type DashboardTaskType = "LEARNING" | "APPLICATION";
+export type DashboardTaskType = "LEARNING" | "APPLICATION" | "RESUME";
 
 export type DashboardTaskPriority = "HIGH" | "MEDIUM" | "LOW";
 
 export type TodayTask = {
   type: DashboardTaskType;
   priority: DashboardTaskPriority;
-  sourceId: number;
+  sourceId: number | null;
   title: string;
   description: string | null;
   dueDate: string | null;
@@ -81,6 +82,16 @@ export type DashboardData = {
   activeGoal: DashboardGoal | null;
   learningSummary: DashboardLearningSummary;
   applicationSummary: DashboardApplicationSummary;
+  resumeSummary: DashboardResumeSummary;
   todayTasks: TodayTask[];
   upcomingActions: UpcomingAction[];
+};
+
+export type DashboardResumeSummary = {
+  totalResumes: number;
+  hasActiveResume: boolean;
+  activeResumeId: number | null;
+  activeResumeName: string | null;
+  activeResumeOriginalFileName: string | null;
+  activeResumeUploadedAt: string | null;
 };

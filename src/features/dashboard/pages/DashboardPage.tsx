@@ -48,6 +48,14 @@ const emptyDashboard: DashboardData = {
     totalApplications: 0,
     statusCounts: [],
   },
+  resumeSummary: {
+  totalResumes: 0,
+  hasActiveResume: false,
+  activeResumeId: null,
+  activeResumeName: null,
+  activeResumeOriginalFileName: null,
+  activeResumeUploadedAt: null,
+},
   todayTasks: [],
   upcomingActions: [],
 };
@@ -78,6 +86,7 @@ const priorityLabels: Record<DashboardTaskPriority, string> = {
 const taskTypeLabels: Record<DashboardTaskType, string> = {
   LEARNING: "Learning",
   APPLICATION: "Application",
+  RESUME: "Resume",
 };
 
 function formatDate(dateValue: string | null) {
@@ -118,7 +127,11 @@ function getTaskTypeBadgeVariant(type: DashboardTaskType): BadgeVariant {
     return "blue";
   }
 
-  return "violet";
+  if (type === "APPLICATION") {
+    return "violet";
+  }
+
+  return "green";
 }
 
 function getApplicationBadgeVariant(status: ApplicationStatus): BadgeVariant {
@@ -164,7 +177,11 @@ function getTaskRoute(type: DashboardTaskType) {
     return APP_ROUTES.LEARNING;
   }
 
-  return APP_ROUTES.APPLICATIONS;
+  if (type === "APPLICATION") {
+    return APP_ROUTES.APPLICATIONS;
+  }
+
+  return APP_ROUTES.RESUME;
 }
 
 function SummaryMetricCard({
@@ -238,7 +255,11 @@ function TodayTaskCard({
         </div>
 
         <Button type="button" size="sm" variant="secondary" onClick={onOpen}>
-          {task.type === "LEARNING" ? "View Topic" : "View Application"}
+          {task.type === "LEARNING"
+  ? "View Topic"
+  : task.type === "APPLICATION"
+    ? "View Application"
+    : "Manage Resume"}
           <ArrowRight size={15} />
         </Button>
       </div>
@@ -796,6 +817,67 @@ export function DashboardPage() {
               </div>
             )}
           </section>
+          <section className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5 shadow-premium sm:p-6">
+  <div className="flex items-start justify-between gap-4">
+    <div>
+      <h2 className="text-lg font-semibold text-white">
+        Resume Readiness
+      </h2>
+      <p className="mt-1 text-sm text-slate-500">
+        Your active resume for applications and future intelligence workflows.
+      </p>
+    </div>
+
+    <Button
+      type="button"
+      size="sm"
+      variant="secondary"
+      onClick={() => navigate(APP_ROUTES.RESUME)}
+    >
+      Manage
+    </Button>
+  </div>
+
+  {dashboard.resumeSummary.hasActiveResume ? (
+    <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+      <Badge variant="green">Active Resume</Badge>
+
+      <h3 className="mt-4 break-words text-base font-semibold text-white">
+        {dashboard.resumeSummary.activeResumeName ??
+          dashboard.resumeSummary.activeResumeOriginalFileName ??
+          "Active Resume"}
+      </h3>
+
+      <p className="mt-2 break-words text-sm text-slate-300">
+        {dashboard.resumeSummary.activeResumeOriginalFileName ??
+          "Filename not available"}
+      </p>
+
+      <p className="mt-3 text-xs text-slate-500">
+        Uploaded {formatDate(dashboard.resumeSummary.activeResumeUploadedAt)}
+      </p>
+
+      <p className="mt-4 text-xs text-slate-500">
+        Total resumes: {dashboard.resumeSummary.totalResumes}
+      </p>
+    </div>
+  ) : (
+    <div className="mt-6 rounded-2xl border border-dashed border-slate-800 bg-slate-900/40 p-5 text-sm text-slate-400">
+      <p>
+        No active resume. Upload or activate a resume to prepare for
+        applications.
+      </p>
+
+      <Button
+        type="button"
+        className="mt-5 w-full"
+        onClick={() => navigate(APP_ROUTES.RESUME)}
+      >
+        Upload Resume
+      </Button>
+    </div>
+  )}
+</section>
 
           <section className="rounded-3xl border border-slate-800 bg-slate-950/80 p-5 shadow-premium sm:p-6">
             <h2 className="text-lg font-semibold text-white">
