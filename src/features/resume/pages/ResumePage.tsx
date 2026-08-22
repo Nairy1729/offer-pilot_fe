@@ -38,6 +38,7 @@ import type {
   WorkMode,
 } from "../types/jdAnalyzer.types"
 import { ResumeManager } from "../components/ResumeManager";
+import { TailorResume } from "../components/TailorResume";
 
 type ActiveTab = "RESUMES" | "JD_ANALYZER" | "TAILOR_RESUME" | "ATS_ANALYZER";
 
@@ -851,7 +852,7 @@ export function ResumePage() {
     }`}
   >
     <p className="font-semibold">Tailor Resume</p>
-    <p className="mt-1 text-xs text-slate-500">Coming soon</p>
+    <p className="mt-1 text-xs text-slate-500">Tailored resume for your next application</p>
   </button>
 
   <button
@@ -882,12 +883,7 @@ export function ResumePage() {
 
       {activeTab === "RESUMES" ? <ResumeManager /> : null}
 
-      {activeTab === "TAILOR_RESUME" ? (
-        <ComingSoonCard
-          title="Tailor Resume"
-          description="Use analyzed job descriptions to generate targeted resume suggestions. This workflow will become active in a future version."
-        />
-      ) : null}
+      {activeTab === "TAILOR_RESUME" ? <TailorResume /> : null}
 
       {activeTab === "ATS_ANALYZER" ? (
         <ComingSoonCard
