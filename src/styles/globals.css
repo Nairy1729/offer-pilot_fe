@@ -162,6 +162,194 @@ body {
   }
 }
 
+@keyframes monkeyDrop {
+  0% {
+    transform: translateY(-260px);
+  }
+
+  16% {
+    transform: translateY(-260px);
+  }
+
+  34% {
+    transform: translateY(0);
+  }
+
+  48% {
+    transform: translateY(-10px);
+  }
+
+  58% {
+    transform: translateY(0);
+  }
+
+  78% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-280px);
+  }
+}
+
+@keyframes monkeySwing {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(4deg);
+  }
+
+  50% {
+    transform: rotate(-3deg);
+  }
+
+  75% {
+    transform: rotate(2deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes monkeyWave {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(-20deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes greetingBubble {
+  0%,
+  48% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  58%,
+  74% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  84%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+}
+
+@keyframes monkeyReduced {
+  0% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+
+  20%,
+  75% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+}
+
+
+@keyframes monkeyDropLong {
+  0% {
+    transform: translateY(-360px);
+  }
+
+  12% {
+    transform: translateY(-360px);
+  }
+
+  30% {
+    transform: translateY(-18px);
+  }
+
+  38% {
+    transform: translateY(0);
+  }
+
+  70% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-370px);
+  }
+}
+
+@keyframes monkeySwingLong {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  12% {
+    transform: rotate(5deg);
+  }
+
+  24% {
+    transform: rotate(-4deg);
+  }
+
+  36% {
+    transform: rotate(3deg);
+  }
+
+  48% {
+    transform: rotate(-2deg);
+  }
+
+  60% {
+    transform: rotate(1.5deg);
+  }
+
+  72% {
+    transform: rotate(-1deg);
+  }
+
+  84% {
+    transform: rotate(0.5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes greetingBubbleLong {
+  0%,
+  42% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  50%,
+  68% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  78%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+}
 
 }
 

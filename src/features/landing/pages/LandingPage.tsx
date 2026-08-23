@@ -14,6 +14,7 @@ import { ApplicationJourneySection } from "../components/ApplicationJourneySecti
 import { GoalEngineSection } from "../components/GoalEngineSection";
 import { RevealSection } from "../components/RevealSection";
 import { FinalTrajectorySection } from "../components/FinalTrajectorySection";
+import { GreetingMonkey } from "../components/GreetingMonkey";
 
 function IntelligenceTransitionSection() {
   return (
@@ -146,6 +147,7 @@ export function LandingPage() {
       <div className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(to_right,rgba(148,163,184,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.04)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
       <div className="relative z-10">
+        <GreetingMonkey />
         <LandingNav />
 
         <HeroSection />
