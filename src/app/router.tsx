@@ -4,7 +4,7 @@ import { ApplicationsPage } from "../features/applications/pages/ApplicationsPag
 import { ProtectedRoute } from "../features/auth/components/ProtectedRoute";
 import { PublicRoute } from "../features/auth/components/PublicRoute";
 import { ForgotPasswordPage } from "../features/auth/pages/ForgotPasswordPage";
-import { LandingPage } from "../features/auth/pages/LandingPage";
+import { LandingPage } from "../features/landing/pages/LandingPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
 import { ResetPasswordPage } from "../features/auth/pages/ResetPasswordPage";
 import { SignupPage } from "../features/auth/pages/SignupPage";
