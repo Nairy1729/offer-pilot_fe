@@ -39,6 +39,7 @@ import type {
 } from "../types/jdAnalyzer.types"
 import { ResumeManager } from "../components/ResumeManager";
 import { TailorResume } from "../components/TailorResume";
+import { ATSAnalyzer } from "../components/ATSAnalyzer";
 
 type ActiveTab = "RESUMES" | "JD_ANALYZER" | "TAILOR_RESUME" | "ATS_ANALYZER";
 
@@ -865,7 +866,7 @@ export function ResumePage() {
     }`}
   >
     <p className="font-semibold">ATS Analyzer</p>
-    <p className="mt-1 text-xs text-slate-500">Coming soon</p>
+    <p className="mt-1 text-xs text-slate-500">Analyze resume-JD compatibility</p>
   </button>
 </section>
 
@@ -885,12 +886,7 @@ export function ResumePage() {
 
       {activeTab === "TAILOR_RESUME" ? <TailorResume /> : null}
 
-      {activeTab === "ATS_ANALYZER" ? (
-        <ComingSoonCard
-          title="ATS Analyzer"
-          description="Compare your resume against a job description and identify gaps. This workflow will become active in a future version."
-        />
-      ) : null}
+      {activeTab === "ATS_ANALYZER" ? <ATSAnalyzer /> : null}
 
       {activeTab === "JD_ANALYZER" ? (
         <section className="grid min-w-0 gap-6 xl:grid-cols-[420px_minmax(0,1fr)]">
