@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import {
   AlertCircle,
   BrainCircuit,
@@ -338,7 +345,6 @@ function TailoredResumePreview({
   onRenderLatex,
   onDownloadLatex,
   onPreviewResume,
-  showResumePreview,
   isRenderingLatex,
   isDownloadingLatex,
 }: {
@@ -346,7 +352,6 @@ function TailoredResumePreview({
   onRenderLatex: () => void;
   onDownloadLatex: () => void;
   onPreviewResume: () => void;
-  showResumePreview: boolean;
   isRenderingLatex: boolean;
   isDownloadingLatex: boolean;
 }) {
@@ -584,11 +589,9 @@ export function TailorResume() {
       jobDescriptions.find((jd) => jd.id === selectedJobDescriptionId) ?? null
     );
   }, [jobDescriptions, selectedJobDescriptionId]);
-  const [showPreview, setShowPreview] = useState(false);
-  const [showResumePreview, setShowResumePreview] = useState(false);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
-  async function loadSetupData() {
+  const loadSetupData = useCallback(async () => {
     try {
       setPageError(null);
 
@@ -611,7 +614,7 @@ export function TailorResume() {
         getApiErrorMessage(error, "Unable to load tailor resume setup data.")
       );
     }
-  }
+  }, []);
 
   useEffect(() => {
     async function initialLoad() {
@@ -624,11 +627,10 @@ export function TailorResume() {
     }
 
     initialLoad();
-  }, []);
+  }, [loadSetupData]);
 
   useEffect(() => {
     if (!isGenerating) {
-      setLoadingStep(0);
       return;
     }
 
@@ -654,6 +656,7 @@ export function TailorResume() {
     }
 
     try {
+      setLoadingStep(0);
       setIsGenerating(true);
       setPageError(null);
       setSuccessMessage(null);
@@ -666,8 +669,6 @@ export function TailorResume() {
       });
 
       setSelectedTailoredResume(result);
-      setShowResumePreview(false);
-      setShowPreview(false);
       setSuccessMessage("Tailored resume draft generated successfully.");
       await loadSetupData();
     } catch (error) {
@@ -699,7 +700,6 @@ export function TailorResume() {
       const result = await getTailoredResumeById(tailoredResumeId);
 
       setSelectedTailoredResume(result);
-      setShowPreview(false);
     } catch (error) {
       setPageError(getApiErrorMessage(error, "Unable to load tailored resume."));
     } finally {
@@ -720,7 +720,6 @@ export function TailorResume() {
       const result = await renderTailoredResumeLatex(selectedTailoredResume.id);
 
       setSelectedTailoredResume(result);
-      setShowResumePreview(false);
       setSuccessMessage("LaTeX rendered successfully.");
       await loadSetupData();
     } catch (error) {
@@ -1055,7 +1054,6 @@ export function TailorResume() {
   onRenderLatex={handleRenderLatex}
   onDownloadLatex={handleDownloadLatex}
   onPreviewResume={() => setIsPreviewModalOpen(true)}
-  showResumePreview={showResumePreview}
   isRenderingLatex={isRenderingLatex}
   isDownloadingLatex={isDownloadingLatex}
 />

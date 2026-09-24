@@ -11,7 +11,6 @@ import {
   Loader2,
   RefreshCcw,
   Target,
-  TrendingUp,
 } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
 import { Button } from "../../../components/ui/button";
@@ -24,7 +23,6 @@ import type {
   CategoryProgress,
   DashboardApplicationSummary,
   DashboardData,
-  DashboardLearningSummary,
   DashboardTaskPriority,
   DashboardTaskType,
   TodayTask,
@@ -358,7 +356,36 @@ export function DashboardPage() {
   }
 
   useEffect(() => {
-    loadDashboard();
+    let ignoreResult = false;
+
+    async function initialLoad() {
+      try {
+        const data = await getDashboard();
+
+        if (!ignoreResult) {
+          setDashboard(data);
+        }
+      } catch (error) {
+        if (!ignoreResult) {
+          setPageError(
+            getApiErrorMessage(
+              error,
+              "We could not load your dashboard right now."
+            )
+          );
+        }
+      } finally {
+        if (!ignoreResult) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void initialLoad();
+
+    return () => {
+      ignoreResult = true;
+    };
   }, []);
 
   if (isLoading) {

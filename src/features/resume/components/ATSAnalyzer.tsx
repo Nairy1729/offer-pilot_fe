@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
-  AlertCircle,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
+import {
   BarChart3,
-  CheckCircle2,
   FileSearch,
   Loader2,
   Search,
@@ -560,7 +564,7 @@ export function ATSAnalyzer() {
         externalFile !== null &&
         selectedJobDescriptionId !== ""));
 
-  async function loadSetupData() {
+  const loadSetupData = useCallback(async () => {
     try {
       setPageError(null);
 
@@ -579,13 +583,15 @@ export function ATSAnalyzer() {
 
       const activeResume = resumeResult.find((resume) => resume.active);
 
-      if (activeResume && selectedResumeId === "") {
-        setSelectedResumeId(activeResume.id);
+      if (activeResume) {
+        setSelectedResumeId((currentSelectedResumeId) =>
+          currentSelectedResumeId === "" ? activeResume.id : currentSelectedResumeId
+        );
       }
     } catch (error) {
       setPageError(getApiErrorMessage(error, "Unable to load ATS setup data."));
     }
-  }
+  }, []);
 
   useEffect(() => {
     async function initialLoad() {
@@ -598,11 +604,10 @@ export function ATSAnalyzer() {
     }
 
     initialLoad();
-  }, []);
+  }, [loadSetupData]);
 
   useEffect(() => {
     if (!isAnalyzing) {
-      setLoadingStep(0);
       return;
     }
 
@@ -618,12 +623,6 @@ export function ATSAnalyzer() {
 
     return () => window.clearInterval(intervalId);
   }, [isAnalyzing]);
-
-  useEffect(() => {
-    if (sourceType === "TAILORED_RESUME" && selectedTailoredResume) {
-      setSelectedJobDescriptionId(selectedTailoredResume.jobDescriptionId);
-    }
-  }, [sourceType, selectedTailoredResume]);
 
   function handleExternalFileChange(file: File | null) {
     setFileError(null);
@@ -655,6 +654,7 @@ export function ATSAnalyzer() {
     }
 
     try {
+      setLoadingStep(0);
       setIsAnalyzing(true);
       setPageError(null);
       setSuccessMessage(null);
@@ -862,11 +862,23 @@ export function ATSAnalyzer() {
 
               <select
                 value={selectedTailoredResumeId}
-                onChange={(event) =>
-                  setSelectedTailoredResumeId(
-                    event.target.value ? Number(event.target.value) : ""
-                  )
-                }
+                onChange={(event) => {
+                  const nextSelectedResumeId = event.target.value
+                    ? Number(event.target.value)
+                    : "";
+
+                  setSelectedTailoredResumeId(nextSelectedResumeId);
+
+                  const nextSelectedResume = tailoredResumes.find(
+                    (resume) => resume.id === nextSelectedResumeId
+                  );
+
+                  if (nextSelectedResume) {
+                    setSelectedJobDescriptionId(
+                      nextSelectedResume.jobDescriptionId
+                    );
+                  }
+                }}
                 className="h-11 w-full rounded-xl border border-slate-800 bg-slate-950 px-3 text-sm text-white outline-none transition focus:border-brand-500"
               >
                 <option value="">Select tailored resume</option>

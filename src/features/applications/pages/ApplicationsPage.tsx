@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BriefcaseBusiness,
   CalendarDays,
@@ -238,6 +238,8 @@ export function ApplicationsPage() {
 
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "">("");
   const [searchQuery, setSearchQuery] = useState("");
+  const statusFilterRef = useRef(statusFilter);
+  const searchQueryRef = useRef(searchQuery);
 
   const [form, setForm] = useState<ApplicationFormState>(emptyApplicationForm);
   const [formErrors, setFormErrors] = useState<ApplicationFormErrors>({});
@@ -269,15 +271,20 @@ export function ApplicationsPage() {
     );
   }, [summary]);
 
-  async function loadApplications() {
+  useEffect(() => {
+    statusFilterRef.current = statusFilter;
+    searchQueryRef.current = searchQuery;
+  }, [searchQuery, statusFilter]);
+
+  const loadApplications = useCallback(async () => {
     try {
       setPageError(null);
 
       const [summaryResult, applicationsResult] = await Promise.all([
         getApplicationSummary(),
         getApplications({
-          status: statusFilter || undefined,
-          search: searchQuery.trim() || undefined,
+          status: statusFilterRef.current || undefined,
+          search: searchQueryRef.current.trim() || undefined,
         }),
       ]);
 
@@ -286,7 +293,7 @@ export function ApplicationsPage() {
     } catch (error) {
       setPageError(getApiErrorMessage(error, "Unable to load applications."));
     }
-  }
+  }, []);
 
   useEffect(() => {
     async function initialLoad() {
@@ -299,7 +306,7 @@ export function ApplicationsPage() {
     }
 
     initialLoad();
-  }, [statusFilter]);
+  }, [loadApplications, statusFilter]);
 
   async function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

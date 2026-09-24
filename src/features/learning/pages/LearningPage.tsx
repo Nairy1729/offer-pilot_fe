@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   BookOpenCheck,
   CheckCircle2,
@@ -344,7 +344,7 @@ export function LearningPage() {
     );
   }, [topics, searchQuery]);
 
-  async function loadLearningData() {
+  const loadLearningData = useCallback(async () => {
     try {
       setPageError(null);
 
@@ -363,7 +363,7 @@ export function LearningPage() {
         getApiErrorMessage(error, "Unable to load learning tracker.")
       );
     }
-  }
+  }, [categoryFilter, statusFilter]);
 
   useEffect(() => {
     async function initialLoad() {
@@ -376,7 +376,7 @@ export function LearningPage() {
     }
 
     initialLoad();
-  }, [categoryFilter, statusFilter]);
+  }, [loadLearningData]);
 
   function updateField(field: keyof TopicFormState, value: string) {
     setForm((currentForm) => ({

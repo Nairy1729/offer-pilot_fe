@@ -1,15 +1,16 @@
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type FormEvent,
+} from "react";
 import {
   AlertCircle,
   BrainCircuit,
-  BriefcaseBusiness,
-  CheckCircle2,
-  Clock3,
   FileSearch,
   Loader2,
   Plus,
-  Save,
-  Sparkles,
   Trash2,
 } from "lucide-react";
 import { Badge } from "../../../components/ui/badge";
@@ -235,32 +236,6 @@ function getDisplayName(item: {
   }
 
   return "Untitled JD Analysis";
-}
-
-function ComingSoonCard({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-3xl border border-dashed border-slate-800 bg-slate-950/70 p-8 text-center shadow-premium">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-300">
-        <Sparkles size={22} />
-      </div>
-
-      <h2 className="mt-5 text-xl font-semibold text-white">{title}</h2>
-
-      <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-slate-400">
-        {description}
-      </p>
-
-      <Button className="mt-6" disabled>
-        Coming Soon
-      </Button>
-    </div>
-  );
 }
 
 function DetailField({
@@ -657,7 +632,7 @@ export function ResumePage() {
     [form.rawDescription]
   );
 
-  async function loadHistory() {
+  const loadHistory = useCallback(async () => {
     try {
       setPageError(null);
       const result = await getJobDescriptionAnalyses();
@@ -665,7 +640,7 @@ export function ResumePage() {
     } catch (error) {
       setPageError(getApiErrorMessage(error, "Unable to load JD history."));
     }
-  }
+  }, []);
 
   useEffect(() => {
     async function initialLoad() {
@@ -678,11 +653,10 @@ export function ResumePage() {
     }
 
     initialLoad();
-  }, []);
+  }, [loadHistory]);
 
   useEffect(() => {
     if (!isAnalyzing) {
-      setLoadingStep(0);
       return;
     }
 
@@ -722,6 +696,7 @@ export function ResumePage() {
     }
 
     try {
+      setLoadingStep(0);
       setIsAnalyzing(true);
       setPageError(null);
       setSuccessMessage(null);

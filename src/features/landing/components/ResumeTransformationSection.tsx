@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   BrainCircuit,
-  CheckCircle2,
   FileText,
   ShieldCheck,
 } from "lucide-react";

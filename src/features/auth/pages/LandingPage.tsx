@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight,
   BarChart3,
-  Brain,
   CheckCircle2,
   ClipboardList,
   Sparkles,

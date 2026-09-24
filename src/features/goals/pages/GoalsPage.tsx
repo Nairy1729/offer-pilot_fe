@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Archive,
   CheckCircle2,
@@ -124,14 +124,6 @@ export function GoalsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [pageError, setPageError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const selectedGoal = useMemo(() => {
-    if (!selectedGoalId) {
-      return null;
-    }
-
-    return goals.find((goal) => goal.id === selectedGoalId) ?? null;
-  }, [goals, selectedGoalId]);
 
   useEffect(() => {
     async function loadGoalsPage() {

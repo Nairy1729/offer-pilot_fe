@@ -89,6 +89,12 @@ export function SignupPage() {
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {submitError ? (
+          <div className="rounded-2xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            {submitError}
+          </div>
+        ) : null}
+
         <div className="space-y-2">
           <label
             htmlFor="fullName"
